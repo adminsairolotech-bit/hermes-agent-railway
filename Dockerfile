@@ -24,12 +24,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
 ENV HERMES_INSTALL_DIR=/app/hermes
 RUN curl -LsSf https://hermes-agent.nousresearch.com/install.sh | UV_NO_CONFIG=1 bash
 
-ENV PATH="/usr/local/lib/hermes-agent:${PATH}"
+ENV PATH="/root/.local/bin:/usr/local/lib/hermes-agent:${PATH}"
 
-# Create data directory
-RUN mkdir -p /app/data
+# Create data directory and install gateway
+RUN mkdir -p /app/data && \
+    /root/.local/bin/hermes gateway install || true
 
 WORKDIR /app
 
-# Default command - start Hermes Agent with Telegram
-CMD ["hermes", "agent", "start", "--telegram"]
+# Default command - start Hermes Gateway for Telegram
+CMD ["/bin/bash", "-c", "source /root/.local/bin/env && hermes gateway start"]
