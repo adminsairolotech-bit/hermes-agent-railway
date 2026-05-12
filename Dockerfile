@@ -13,9 +13,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Hermes Agent
-RUN curl -LsSf https://hermes-agent.nousresearch.com/install.sh | UV_NO_CONFIG=1 bash -s -- --install-dir /app/hermes
+ENV HERMES_INSTALL_DIR=/app/hermes
+RUN curl -LsSf https://hermes-agent.nousresearch.com/install.sh | UV_NO_CONFIG=1 bash
 
-ENV PATH="/app/hermes:${PATH}"
+ENV PATH="/usr/local/lib/hermes-agent:${PATH}"
 
 # Create data directory
 RUN mkdir -p /app/data
