@@ -35,4 +35,4 @@ RUN mkdir -p /app/data && \
 WORKDIR /app
 
 # Default command - run Hermes Gateway for Telegram
-CMD ["/bin/bash", "-c", "source /root/.local/bin/env && hermes gateway run"]
+CMD ["/bin/bash", "-c", "source /root/.local/bin/env && hermes gateway run --telegram"]
