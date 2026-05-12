@@ -2,6 +2,8 @@ FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1
 ENV HERMES_HOME=/app/data
+ENV OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+ENV TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -29,5 +31,5 @@ RUN mkdir -p /app/data
 
 WORKDIR /app
 
-# Default command - start Hermes Agent
-CMD ["hermes", "agent", "start"]
+# Default command - start Hermes Agent with Telegram
+CMD ["hermes", "agent", "start", "--telegram"]
