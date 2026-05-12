@@ -1,6 +1,8 @@
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1
+ENV RAILWAY=1
+ENV HERMES_IN_DOCKER=1
 ENV HERMES_HOME=/app/data
 ENV OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
 ENV TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
@@ -32,5 +34,5 @@ RUN mkdir -p /app/data && \
 
 WORKDIR /app
 
-# Default command - start Hermes Gateway for Telegram
-CMD ["/bin/bash", "-c", "source /root/.local/bin/env && hermes gateway start"]
+# Default command - run Hermes Gateway for Telegram
+CMD ["/bin/bash", "-c", "source /root/.local/bin/env && hermes gateway run"]
