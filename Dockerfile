@@ -28,11 +28,16 @@ RUN curl -LsSf https://hermes-agent.nousresearch.com/install.sh | UV_NO_CONFIG=1
 
 ENV PATH="/root/.local/bin:/usr/local/lib/hermes-agent:${PATH}"
 
-# Create data directory and install gateway
+# Create data directory and configure Telegram
 RUN mkdir -p /app/data && \
     /root/.local/bin/hermes gateway install || true
 
+# Create config file with Telegram settings
+RUN echo 'telegram:' > /app/data/config.yaml && \
+    echo '  bot_token: "'$TELEGRAM_BOT_TOKEN'"' >> /app/data/config.yaml && \
+    echo '  enabled: true' >> /app/data/config.yaml
+
 WORKDIR /app
 
-# Default command - run Hermes Gateway for Telegram
-CMD ["/bin/bash", "-c", "source /root/.local/bin/env && hermes gateway run --telegram"]
+# Default command - run Hermes Gateway
+CMD ["/bin/bash", "-c", "source /root/.local/bin/env && hermes gateway run"]
