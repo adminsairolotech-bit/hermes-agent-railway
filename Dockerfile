@@ -10,7 +10,13 @@ RUN apt-get update && apt-get install -y \
     ripgrep \
     ffmpeg \
     libglib2.0-0 \
+    xz-utils \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 22 (required by Hermes Agent)
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Hermes Agent
 ENV HERMES_INSTALL_DIR=/app/hermes
