@@ -6,6 +6,9 @@ ENV HERMES_IN_DOCKER=1
 ENV HERMES_HOME=/app/data
 ENV OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
 ENV TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+ENV NVIDIA_API_KEY=${NVIDIA_API_KEY}
+ENV GEMINI_API_KEY=${GEMINI_API_KEY}
+ENV GATEWAY_ALLOW_ALL_USERS=true
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -32,9 +35,20 @@ ENV PATH="/root/.local/bin:/usr/local/lib/hermes-agent:${PATH}"
 RUN mkdir -p /app/data && \
     /root/.local/bin/hermes gateway install || true
 
-# Create config file with Telegram settings
-RUN echo 'telegram:' > /app/data/config.yaml && \
-    echo '  bot_token: "'$TELEGRAM_BOT_TOKEN'"' >> /app/data/config.yaml && \
+# Create full config file with model + platform settings
+RUN echo 'model:' > /app/data/config.yaml && \
+    echo '  provider: openrouter' >> /app/data/config.yaml && \
+    echo '  default: anthropic/claude-sonnet-4.6' >> /app/data/config.yaml && \
+    echo '' >> /app/data/config.yaml && \
+    echo 'providers:' >> /app/data/config.yaml && \
+    echo '  openrouter:' >> /app/data/config.yaml && \
+    echo '    api_key: "'$OPENROUTER_API_KEY'"' >> /app/data/config.yaml && \
+    echo '' >> /app/data/config.yaml && \
+    echo 'fallback_model:' >> /app/data/config.yaml && \
+    echo '  provider: google' >> /app/data/config.yaml && \
+    echo '  model: gemini-2.5-flash' >> /app/data/config.yaml && \
+    echo '' >> /app/data/config.yaml && \
+    echo 'telegram:' >> /app/data/config.yaml && \
     echo '  enabled: true' >> /app/data/config.yaml
 
 WORKDIR /app
