@@ -31,27 +31,15 @@ RUN curl -LsSf https://hermes-agent.nousresearch.com/install.sh | UV_NO_CONFIG=1
 
 ENV PATH="/root/.local/bin:/usr/local/lib/hermes-agent:${PATH}"
 
-# Create data directory and configure Telegram
+# Create data directory
 RUN mkdir -p /app/data && \
     /root/.local/bin/hermes gateway install || true
 
-# Create full config file with model + platform settings
-RUN echo 'model:' > /app/data/config.yaml && \
-    echo '  provider: openrouter' >> /app/data/config.yaml && \
-    echo '  default: anthropic/claude-sonnet-4.6' >> /app/data/config.yaml && \
-    echo '' >> /app/data/config.yaml && \
-    echo 'providers:' >> /app/data/config.yaml && \
-    echo '  openrouter:' >> /app/data/config.yaml && \
-    echo '    api_key: "'$OPENROUTER_API_KEY'"' >> /app/data/config.yaml && \
-    echo '' >> /app/data/config.yaml && \
-    echo 'fallback_model:' >> /app/data/config.yaml && \
-    echo '  provider: google' >> /app/data/config.yaml && \
-    echo '  model: gemini-2.5-flash' >> /app/data/config.yaml && \
-    echo '' >> /app/data/config.yaml && \
-    echo 'telegram:' >> /app/data/config.yaml && \
-    echo '  enabled: true' >> /app/data/config.yaml
-
 WORKDIR /app
 
+# Copy and run startup script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Default command - run Hermes Gateway
-CMD ["/bin/bash", "-c", "source /root/.local/bin/env && hermes gateway run"]
+CMD ["/app/start.sh"]
