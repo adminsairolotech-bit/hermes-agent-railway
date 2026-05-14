@@ -7,12 +7,12 @@ source /root/.local/bin/env 2>/dev/null || true
 # Create config.yaml with env vars (no fallback to avoid rate limits)
 cat > /app/data/config.yaml << 'CONFIGEOF'
 model:
-  provider: openrouter
-  default: anthropic/claude-sonnet-4.6
+  provider: groq
+  default: groq/llama-3.3-70b-versatile
 
 providers:
-  openrouter:
-    api_key: "${OPENROUTER_API_KEY}"
+  groq:
+    api_key: "${GROQ_API_KEY}"
 
 nvidia:
   api_key: "${NVIDIA_API_KEY}"
@@ -22,7 +22,7 @@ telegram:
 CONFIGEOF
 
 # Replace env var placeholders with actual values
-sed -i "s/\${OPENROUTER_API_KEY}/$OPENROUTER_API_KEY/g" /app/data/config.yaml
+sed -i "s/\${GROQ_API_KEY}/$GROQ_API_KEY/g" /app/data/config.yaml
 sed -i "s/\${NVIDIA_API_KEY}/$NVIDIA_API_KEY/g" /app/data/config.yaml
 
 echo "Config created at /app/data/config.yaml:"
